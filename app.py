@@ -1,4 +1,6 @@
 async def on_startup(dp):
+    import torch
+    import torchvision
     import filters
     import middlewares
     filters.setup(dp)
