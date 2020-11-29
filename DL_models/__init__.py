@@ -1,1 +1,1 @@
-from .sex_model import NeuralNetwork
+from .sex_model import nn
