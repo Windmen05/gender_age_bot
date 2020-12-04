@@ -1,20 +1,16 @@
 
-version: '3.1'
+version: '3.7'
 
 services:
 
   db:
-    container_name: database
     image: postgres
     restart: always
-    ports:
-      - 5432:5432
     env_file:
       - ".env"
 
 
   adminer:
-    container_name: adminer
     image: adminer
     restart: always
     ports:
@@ -22,7 +18,6 @@ services:
 
 
   tgbot:
-    container_name: bot
     build: .
     volumes:
       - .:/src
