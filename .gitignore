@@ -129,4 +129,8 @@ dmypy.json
 .pyre/
 .idea/*
 
+# saved images
+*.jpg
+*.img
+
 .env.dist

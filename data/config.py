@@ -5,11 +5,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BOT_TOKEN = str(os.getenv("BOT_TOKEN"))
-print(BOT_TOKEN)
-admins = [
+admin_id = [
     os.getenv("ADMIN_ID"),
 ]
-
 ip = os.getenv("ip")
 host = os.getenv("PGHOST")
 PG_USER = os.getenv("PG_USER")

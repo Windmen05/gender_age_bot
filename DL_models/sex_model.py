@@ -1,18 +1,19 @@
-from torch import cuda, load, device
-import torchvision
+import torch
+from torchvision import transforms
 from PIL import Image
-import numpy as np
+import warnings
+warnings.filterwarnings("ignore")
 import os
 
 
 class NeuralNetwork:
     def __init__(self, device='cpu', path=os.path.join(os.path.realpath('data/aerialmodel.pth'))):
-        self.device = device("cuda" if cuda.is_available() else "cpu")
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.path = path
         self.model = self.load_Model()
 
     def load_Model(self):
-        model = load(self.path, map_location=self.device)
+        model = torch.load(self.path, map_location=self.device)
         model.eval()
         print("load_model ")
         return model
@@ -20,11 +21,11 @@ class NeuralNetwork:
     # To preprocess an image to transform it to what is required by the Neural Network
 
     def preprocess(self, image):
-        transformations = torchvision.transforms.Compose([torchvision.transforms.Resize((224, 224)),
-                                                          torchvision.transforms.ToTensor(),
-                                                          torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                                                           std=[0.229, 0.224, 0.225]),
-                                                          ])
+        transformations = transforms.Compose([transforms.Resize((224, 224)),
+                                              transforms.ToTensor(),
+                                              transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                   std=[0.229, 0.224, 0.225]),
+                                              ])
         return transformations(image)
     # Given the path of an image, returns the neural network's predictions for that image
     def get_predictions(self, image_filename):

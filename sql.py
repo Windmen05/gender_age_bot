@@ -14,8 +14,11 @@ async def create_db():
     logging.info("Connecting to database...")
     conn: asyncpg.Connection = await asyncpg.connect(user=PG_USER,
                                                      password=PG_PASS,
-                                                     host="db")
-    await conn.execute(create_db_command)
+                                                     host=host)
+    try:
+        await conn.execute(create_db_command)
+    except asyncpg.exceptions.DuplicateTableError:
+        pass
     await conn.close()
     logging.info("Table users created")
 
@@ -23,7 +26,7 @@ async def create_db():
 async def create_pool():
     return await asyncpg.create_pool(user=PG_USER,
                                      password=PG_PASS,
-                                     host="db")
+                                     host=host)
 
 
 if __name__ == '__main__':
