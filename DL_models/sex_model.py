@@ -32,6 +32,6 @@ class NeuralNetwork:
         image = Image.open(image_filename).convert('RGB')
         image_preprocessed = self.preprocess(image).unsqueeze(0)
         predicts = self.model(image_preprocessed.to(self.device)).data.cpu()
-        return (int(1 - predicts.argmax()) * 'fe' + 'male with chanse: ') + str(round(float(predicts[0][predicts.argmax()]),3)*100) + "%"
-
+        return bool(predicts.argmax()), round(float(predicts[0][predicts.argmax()]), 2) * 100
+        #return predicts.argmax(), round(float(predicts[0][predicts.argmax()]), 3) * 100
 nn = NeuralNetwork()
