@@ -105,7 +105,6 @@ async def handle_docs_photo(message: Message):
         male, pred = nn.get_predictions(path_img)
         await db.add_pred(unique_id, pred, male)
         await message.reply((int(1 - male) * 'fe' + 'male with chanse: ') + str(pred) + "%")
-        await bot.send_message(text=count_preds, chat_id=chat_id)
     except Exception as e:
         await message.reply(e)
 
