@@ -2,9 +2,13 @@ from aiogram import types
 from asyncpg import Connection, Record
 from asyncpg.exceptions import UniqueViolationError
 from aiogram.types import Message
-from DL_models import nn
 from loader import bot, dp, db
+from DL_models import nn, face_detection
 from numpy import array
+import cv2
+import os
+from PIL import Image
+import io
 
 class DBCommands:
     pool: Connection = db
@@ -59,19 +63,6 @@ class DBCommands:
 
         return await self.pool.fetchval(command, user_id, file_unique_id, pred_chance, pred_sex)
 
-
-'''
-    async def check_balance(self):
-        command = self.CHECK_BALANCE
-        user_id = types.User.get_current().id
-        return await self.pool.fetchval(command, user_id)
-
-    async def add_money(self, money):
-        command = self.ADD_MONEY
-        user_id = types.User.get_current().id
-        return await self.pool.fetchval(command, money, user_id)
-'''
-
 db = DBCommands()
 
 
@@ -95,7 +86,7 @@ async def register_user(message: types.Message):
     await bot.send_message(chat_id, text)
 
 
-@dp.message_handler(content_types=['photo', 'document'])
+'''@dp.message_handler(content_types=['photo', 'document'])
 async def handle_docs_photo(message: Message):
     try:
         chat_id = message.from_user.id
@@ -106,18 +97,21 @@ async def handle_docs_photo(message: Message):
         await db.add_pred(unique_id, pred, male)
         await message.reply((int(1 - male) * 'fe' + 'male with chanse: ') + str(pred) + "%")
     except Exception as e:
-        await message.reply(e)
+        await message.reply(e)'''
 
-
-'''@dp.message_handler(commands=["all_preds"])
+@dp.message_handler(content_types=['photo'])
 async def handle_docs_photo(message: Message):
     try:
-        chat_id = message.from_user.id
-        count_users = await db.count_all_preds()
-        for i in count_users:
-            await bot.send_message(text=i, chat_id=chat_id)
+        path = "images/" + message.photo[-1].file_unique_id + ".jpg"
+        await message.photo[-1].download(path)
+        from aiogram.types import input_file
+        img = face_detection.get_predictions(path)
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        img = Image.fromarray(img)
+        img.save(path)
+        await message.answer_photo(photo=input_file.InputFile(path))
     except Exception as e:
-        await message.reply(e)'''
+        await message.reply(e)
 
 @dp.message_handler(commands=["show_all_preds"])
 async def handle_docs_photo(message: Message):

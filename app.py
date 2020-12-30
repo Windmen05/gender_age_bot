@@ -1,5 +1,5 @@
-
-
+#import cv2
+#raise IOError(cv2.__version__)
 async def on_startup(dp):
     import filters
     import middlewares
