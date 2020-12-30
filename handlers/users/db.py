@@ -105,7 +105,8 @@ async def handle_docs_photo(message: Message):
         path = "images/" + message.photo[-1].file_unique_id + ".jpg"
         await message.photo[-1].download(path)
         from aiogram.types import input_file
-        img = face_detection.get_predictions(path)
+        text = 'test_text'
+        img = face_detection.get_predictions(path, text)
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         img = Image.fromarray(img)
         img.save(path)
