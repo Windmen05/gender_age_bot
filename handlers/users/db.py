@@ -107,11 +107,11 @@ async def handle_docs_photo(message: Message):
         from aiogram.types import input_file
         text = 'test_text'
         img = face_detection.get_predictions(path, text)
-        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        img = Image.fromarray(img)
-        img.save(path)
-        await message.answer_photo(photo=input_file.InputFile(path))
+        is_success, img_buf_arr = cv2.imencode(".jpg", img)
+        byte_img = img_buf_arr.tobytes()
+        await message.answer_photo(photo=byte_img)
     except Exception as e:
+        raise IOError(e)
         await message.reply(e)
 
 @dp.message_handler(commands=["show_all_preds"])
