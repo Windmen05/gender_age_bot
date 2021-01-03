@@ -14,11 +14,29 @@ class Face_Detection:
         print("load_model cv")
         return model
 
+    '''
     # Given the path of an image, returns the neural network's predictions for that image
+    ###Process photo with save on disk
     def get_predictions(self, image_filename, text):
         img = cv2.imread(image_filename)
         image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         predicts = self.model.detectMultiScale(image, 1.1, 4)
+        for (x, y, w, h) in predicts:
+            cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        cv2.putText(img, text, (x, y),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (255, 0, 0),
+                    2)
+        return img
+    '''
+
+    ###Process photo without save on disk // bytes
+    def get_predictions(self, img_str, text):
+        import numpy as np
+        nparr = np.fromstring(img_str, np.uint8)
+        img = cv2.imdecode(nparr, cv2.COLOR_BGR2GRAY)
+        predicts = self.model.detectMultiScale(img, 1.1, 4)
         for (x, y, w, h) in predicts:
             cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
         cv2.putText(img, text, (x, y),

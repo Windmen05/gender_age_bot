@@ -86,25 +86,28 @@ async def register_user(message: types.Message):
     await bot.send_message(chat_id, text)
 
 
-'''@dp.message_handler(content_types=['photo', 'document'])
+@dp.message_handler(content_types=['photo', 'document'])
 async def handle_docs_photo(message: Message):
     try:
         chat_id = message.from_user.id
         unique_id = message.photo[-1].file_unique_id
-        path_img = "images/" + message.photo[-1].file_unique_id + ".jpg"
-        await message.photo[-1].download(path_img)
-        male, pred = nn.get_predictions(path_img)
+        '''path_img = "images/" + message.photo[-1].file_unique_id + ".jpg"
+        await message.photo[-1].download(path_img)'''
+        downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
+        male, pred = nn.get_predictions(downloaded.getvalue())
         await db.add_pred(unique_id, pred, male)
         await message.reply((int(1 - male) * 'fe' + 'male with chanse: ') + str(pred) + "%")
     except Exception as e:
-        await message.reply(e)'''
+        await message.reply(e)
+        raise IOError(e)
 
+'''
+###Process photo with save on disk
 @dp.message_handler(content_types=['photo'])
 async def handle_docs_photo(message: Message):
     try:
         path = "images/" + message.photo[-1].file_unique_id + ".jpg"
         await message.photo[-1].download(path)
-        from aiogram.types import input_file
         text = 'test_text'
         img = face_detection.get_predictions(path, text)
         is_success, img_buf_arr = cv2.imencode(".jpg", img)
@@ -113,6 +116,23 @@ async def handle_docs_photo(message: Message):
     except Exception as e:
         raise IOError(e)
         await message.reply(e)
+'''
+
+'''
+###Process photo without save on disk // bytes
+@dp.message_handler(content_types=['photo'])
+async def handle_docs_photo(message: Message):
+    try:
+        downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
+        text = 'test_text'
+        img = face_detection.get_predictions(downloaded.getvalue(), text)
+        is_success, img_buf_arr = cv2.imencode(".jpg", img)
+        byte_img = img_buf_arr.tobytes()
+        await message.answer_photo(photo=byte_img)
+    except Exception as e:
+        raise IOError(e)
+        await message.reply(e)
+'''
 
 @dp.message_handler(commands=["show_all_preds"])
 async def handle_docs_photo(message: Message):
