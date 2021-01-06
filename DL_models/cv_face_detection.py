@@ -31,6 +31,7 @@ class Face_Detection:
         return img
     '''
 
+
     ###Process photo without save on disk // bytes
     def get_predictions(self, img_str, text):
         import numpy as np

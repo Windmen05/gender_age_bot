@@ -3,7 +3,7 @@ from asyncpg import Connection, Record
 from asyncpg.exceptions import UniqueViolationError
 from aiogram.types import Message
 from loader import bot, dp, db
-from DL_models import nn, face_detection
+from DL_models import nn, face_detection, am
 from numpy import array
 import cv2
 import os
@@ -85,23 +85,22 @@ async def register_user(message: types.Message):
 
     await bot.send_message(chat_id, text)
 
-'''
+
 @dp.message_handler(content_types=['photo', 'document'])
 async def handle_docs_photo(message: Message):
     try:
         chat_id = message.from_user.id
         unique_id = message.photo[-1].file_unique_id
         downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
-        male, pred = nn.get_predictions(downloaded.getvalue())
+        male, pred = am.get_predictions(downloaded.getvalue())
         await db.add_pred(unique_id, pred, male)
         await message.reply((int(1 - male) * 'fe' + 'male with chanse: ') + str(pred) + "%")
     except Exception as e:
         await message.reply(e)
         raise IOError(e)
-'''
 
 
-###Process photo without save on disk // bytes
+'''###Process photo without save on disk // bytes
 @dp.message_handler(content_types=['photo'])
 async def handle_docs_photo(message: Message):
     try:
@@ -114,7 +113,7 @@ async def handle_docs_photo(message: Message):
     except Exception as e:
         raise IOError(e)
         await message.reply(e)
-
+'''
 
 @dp.message_handler(commands=["show_all_preds"])
 async def handle_docs_photo(message: Message):
