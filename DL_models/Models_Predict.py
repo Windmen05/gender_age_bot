@@ -17,7 +17,7 @@ import cv2
 from PIL import Image
 
 
-class Face_Detection:
+class Models_Predict:
     def __init__(self, device='cpu',
                  path_face=os.path.join(os.path.realpath('data/haarcascade_frontalface_default.xml')),
                  path_sex=os.path.join(os.path.realpath('data/aerialmodel.pth')),
@@ -70,4 +70,4 @@ class Face_Detection:
                         (0, 0, 255),
                         2)
         return img
-face_detection = Face_Detection()
+models_predict = Models_Predict()

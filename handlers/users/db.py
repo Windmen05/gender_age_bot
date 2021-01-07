@@ -3,7 +3,7 @@ from asyncpg import Connection, Record
 from asyncpg.exceptions import UniqueViolationError
 from aiogram.types import Message
 from loader import bot, dp, db
-from DL_models import nn, face_detection, am
+from DL_models import nn, models_predict, am
 from numpy import array
 import cv2
 import os
@@ -106,7 +106,7 @@ async def handle_docs_photo(message: Message):
     try:
         downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
         text = 'test_text'
-        img = face_detection.get_predictions(downloaded.getvalue(), text)
+        img = models_predict.get_predictions(downloaded.getvalue(), text)
         is_success, img_buf_arr = cv2.imencode(".jpg", img)
         byte_img = img_buf_arr.tobytes()
         await message.answer_photo(photo=byte_img)
