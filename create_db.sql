@@ -14,7 +14,7 @@ create table if not exists user_preds
     file_unique_id   text,
     pred_chance      smallint,
     pred_sex         boolean,
-    pred_age         real,
+    pred_age         smallint,
     id               serial     not null
 );
 
