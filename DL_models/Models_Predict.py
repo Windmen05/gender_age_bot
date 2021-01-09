@@ -53,7 +53,7 @@ class Models_Predict:
     def get_predictions(self, img_str, text):
         nparr = np.fromstring(img_str, np.uint8)
         img = cv2.imdecode(nparr, cv2.COLOR_BGR2GRAY)
-        predicts = self.model_face.detectMultiScale(img, 1.1, 4)
+        predicts = self.model_face.detectMultiScale(img, 1.2, 4)
         for (x, y, w, h) in predicts:
             image = Image.fromarray(img[y:y+h, x:x+w])
             image_preprocessed = self.preprocess(image).unsqueeze(0).to(self.device)
