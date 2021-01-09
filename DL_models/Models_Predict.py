@@ -1,17 +1,10 @@
-import cv2
-import os
 import warnings
 warnings.filterwarnings("ignore")
-from .sex_model import nn
-import numpy as np
 import torch
 from torchvision import transforms
-from PIL import Image
 import warnings
 warnings.filterwarnings("ignore")
 import os
-from numpy import fromstring, uint8, expand_dims
-from cv2 import imdecode, COLOR_BGR2GRAY
 import numpy as np
 import cv2
 from PIL import Image

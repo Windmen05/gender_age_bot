@@ -1,14 +1,12 @@
+import cv2
 from aiogram import types
+from aiogram.types import Message
 from asyncpg import Connection, Record
 from asyncpg.exceptions import UniqueViolationError
-from aiogram.types import Message
+
+from DL_models import models_predict
 from loader import bot, dp, db
-from DL_models import nn, models_predict, am
-from numpy import array
-import cv2
-import os
-from PIL import Image
-import io
+
 
 class DBCommands:
     pool: Connection = db
