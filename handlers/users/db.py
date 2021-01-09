@@ -104,9 +104,11 @@ async def handle_docs_photo(message: Message):
 @dp.message_handler(content_types=['photo'])
 async def handle_docs_photo(message: Message):
     try:
+        unique_id = message.photo[-1].file_unique_id
         downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
         text = 'test_text'
-        img = models_predict.get_predictions(downloaded.getvalue(), text)
+        img, pred_sex_chance, pred_sex, pred_age = models_predict.get_predictions(downloaded.getvalue(), text)
+        await db.add_pred(unique_id, pred_sex_chance, pred_sex, pred_age)
         is_success, img_buf_arr = cv2.imencode(".jpg", img)
         byte_img = img_buf_arr.tobytes()
         await message.answer_photo(photo=byte_img)
@@ -123,7 +125,8 @@ async def handle_docs_photo(message: Message):
     text = f"""You predicted {count_preds} images
     """
     for i in count_users:
-        pred_text = (int(1 - i['pred_sex']) * 'fe' + 'male with chanse: ' + str(i['pred_chance']) + "%")
+        pred_text = (int(1 - i['pred_sex']) * 'fe' + 'male with chanse: ' + str(i['pred_chance'])
+                     + "% \n and age: "+ str(i['pred_age']))
         text += \
         f"""
         file with unique id = {i['file_unique_id']} 

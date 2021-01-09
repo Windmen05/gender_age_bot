@@ -60,14 +60,17 @@ class Models_Predict:
 
             predicts_sex = self.model_sex(image_preprocessed).data.cpu()
             predicts_age = self.model_age(image_preprocessed).data.cpu()
-            text_1 = ((int(1 - bool(predicts_sex.argmax())) * 'fe' + 'male: ')
-                    + str(round(float(predicts_sex[0][predicts_sex.argmax()]), 2) * 100) + "%")
+            pred_sex = bool(predicts_sex.argmax())
+            pred_sex_chance = round(float(predicts_sex[0][predicts_sex.argmax()]), 2) * 100
+            pred_age = round(float(predicts_age), 1)
+            text_1 = ((int(1 - pred_sex) * 'fe' + 'male: ')
+                    + str(pred_sex_chance) + "%")
             cv2.putText(img, text_1, (x, y-5),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         1,
                         (0, 0, 255),
                         2)
-            text_2 = "age: " + str(round(float(predicts_age), 1))
+            text_2 = "age: " + str(pred_age)
             cv2.putText(img, text_2 , (x, y-30),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         1,
@@ -75,5 +78,5 @@ class Models_Predict:
                         2)
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
 
-        return img
+        return img, pred_sex_chance, pred_sex, pred_age
 models_predict = Models_Predict()
