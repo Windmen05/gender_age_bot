@@ -84,20 +84,6 @@ async def register_user(message: types.Message):
     await bot.send_message(chat_id, text)
 
 
-'''@dp.message_handler(content_types=['photo', 'document'])
-async def handle_docs_photo(message: Message):
-    try:
-        chat_id = message.from_user.id
-        unique_id = message.photo[-1].file_unique_id
-        downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
-        male, pred = am.get_predictions(downloaded.getvalue())
-        await db.add_pred(unique_id, pred, male)
-        await message.reply((int(1 - male) * 'fe' + 'male with chanse: ') + str(pred) + "%")
-    except Exception as e:
-        await message.reply(e)
-        raise IOError(e)'''
-
-
 ###Process photo without save on disk // bytes
 @dp.message_handler(content_types=['photo'])
 async def handle_docs_photo(message: Message):
