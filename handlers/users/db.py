@@ -15,10 +15,10 @@ class DBCommands:
     ADD_NEW_USER = "INSERT INTO users(chat_id, username, full_name) VALUES ($1, $2, $3) RETURNING id"
     COUNT_USERS = "SELECT COUNT(*) FROM users"
     SELECT_PREDS = "SELECT COUNT(*) FROM user_preds"
-    SELECT_ALL_PREDS = "SELECT pred_chance, file_unique_id, pred_sex, id FROM user_preds"
+    SELECT_ALL_PREDS = "SELECT pred_chance, file_unique_id, pred_sex, id, pred_age FROM user_preds"
     GET_ID = "SELECT id FROM users WHERE chat_id = $1"
-    ADD_PRED = "INSERT INTO user_preds(chat_id, file_unique_id, pred_chance, pred_sex) " \
-               "VALUES ($1, $2, $3, $4) RETURNING id"
+    ADD_PRED = "INSERT INTO user_preds(chat_id, file_unique_id, pred_chance, pred_sex, pred_age) " \
+               "VALUES ($1, $2, $3, $4, $5) RETURNING id"
 
     # CHECK_BALANCE = "SELECT balance FROM users WHERE chat_id = $1"
     # ADD_MONEY = "UPDATE users SET balance=balance+$1 WHERE chat_id = $2"
@@ -57,11 +57,11 @@ class DBCommands:
         user_id = types.User.get_current().id
         return await self.pool.fetchval(command, user_id)
 
-    async def add_pred(self, file_unique_id, pred_chance, pred_sex):
+    async def add_pred(self, file_unique_id, pred_chance, pred_sex, pred_age):
         command = self.ADD_PRED
         user_id = types.User.get_current().id
 
-        return await self.pool.fetchval(command, user_id, file_unique_id, pred_chance, pred_sex)
+        return await self.pool.fetchval(command, user_id, file_unique_id, pred_chance, pred_sex, pred_age)
 
 db = DBCommands()
 
