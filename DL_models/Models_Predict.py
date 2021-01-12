@@ -64,7 +64,7 @@ class Models_Predict:
                         (0, 0, 255),
                         2)
             text_2 = "age: " + str(pred_age)
-            cv2.putText(img, text_2 , (x, y-30),
+            cv2.putText(img, text_2, (x, y-30),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         1,
                         (0, 0, 255),

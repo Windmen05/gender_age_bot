@@ -97,8 +97,10 @@ async def handle_docs_photo(message: Message):
         is_success, img_buf_arr = cv2.imencode(".jpg", img)
         byte_img = img_buf_arr.tobytes()
         await message.answer_photo(photo=byte_img)
+    except UnboundLocalError:
+        await message.reply("face not recognized, please upload another photo")
     except Exception as e:
-        raise IOError(e)
+        #raise IOError(e)
         await message.reply(e)
 
 
