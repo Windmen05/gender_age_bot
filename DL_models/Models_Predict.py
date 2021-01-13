@@ -1,15 +1,11 @@
-import warnings
-
-warnings.filterwarnings("ignore")
 import torch
 from torchvision import transforms
 import warnings
-
-warnings.filterwarnings("ignore")
 import os
 import numpy as np
 import cv2
 from PIL import Image
+warnings.filterwarnings("ignore")
 
 
 class Models_Predict:

@@ -3,7 +3,6 @@ from aiogram import types
 from aiogram.types import Message
 from asyncpg import Connection, Record
 from asyncpg.exceptions import UniqueViolationError
-
 from DL_models import models_predict
 from loader import bot, dp, db
 
