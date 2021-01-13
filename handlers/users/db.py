@@ -91,9 +91,9 @@ async def handle_docs_photo(message: Message):
         unique_id = message.photo[-1].file_unique_id
         downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
         text = 'test_text'
-        img, pred_sex_chance, pred_sex, pred_age = models_predict.get_predictions(downloaded.getvalue(), text)
-        pred_age_multiple_10 = int(pred_age*10)
-        await db.add_pred(unique_id, pred_sex_chance, pred_sex, pred_age_multiple_10)
+        img, preds_sex_chance, preds_sex, preds_age = models_predict.get_predictions(downloaded.getvalue(), text)
+        for i in range(preds_sex.shape[0]):
+            await db.add_pred(unique_id, preds_sex_chance[i], bool(preds_sex[i]), preds_age[i])
         is_success, img_buf_arr = cv2.imencode(".jpg", img)
         byte_img = img_buf_arr.tobytes()
         await message.answer_photo(photo=byte_img)
@@ -120,4 +120,3 @@ async def handle_docs_photo(message: Message):
         and id = {i['id']} was predicted as {pred_text}
         """
     await bot.send_message(text=text, chat_id=chat_id)
-#pred_chance, file_unique_id, pred_sex, id

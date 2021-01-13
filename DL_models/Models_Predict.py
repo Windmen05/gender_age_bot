@@ -46,16 +46,23 @@ class Models_Predict:
     def get_predictions(self, img_str, text):
         nparr = np.fromstring(img_str, np.uint8)
         img = cv2.imdecode(nparr, cv2.COLOR_BGR2GRAY)
-        predicts = self.model_face.detectMultiScale(img, 1.2, 4)
-        for (x, y, w, h) in predicts:
+        predicts_coordinates = self.model_face.detectMultiScale(img, 1.2, 4)
+        face_numbers = predicts_coordinates.shape[0]
+        preds_sex_chance = np.zeros((face_numbers))
+        preds_sex = np.zeros((face_numbers))
+        preds_age = np.zeros((face_numbers))
+        for i, (x, y, w, h) in enumerate(predicts_coordinates):
             image = Image.fromarray(img[y:y+h, x:x+w])
             image_preprocessed = self.preprocess(image).unsqueeze(0).to(self.device)
 
             predicts_sex = self.model_sex(image_preprocessed).data.cpu()
             predicts_age = self.model_age(image_preprocessed).data.cpu()
-            pred_sex = bool(predicts_sex.argmax())
             pred_sex_chance = round(float(predicts_sex[0][predicts_sex.argmax()]), 2) * 100
+            preds_sex_chance[i] = pred_sex_chance
+            pred_sex = predicts_sex.argmax()
+            preds_sex[i] = pred_sex
             pred_age = round(float(predicts_age), 1)
+            preds_age[i] = int(pred_age * 10)
             text_1 = ((int(1 - pred_sex) * 'fe' + 'male: ')
                     + str(pred_sex_chance) + "%")
             cv2.putText(img, text_1, (x, y-5),
@@ -70,6 +77,5 @@ class Models_Predict:
                         (0, 0, 255),
                         2)
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
-
-        return img, pred_sex_chance, pred_sex, pred_age
+        return img, preds_sex_chance, preds_sex, preds_age
 models_predict = Models_Predict()
