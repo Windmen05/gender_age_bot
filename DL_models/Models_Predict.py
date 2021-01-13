@@ -42,35 +42,44 @@ class Models_Predict:
         ])
         return transformations(image)
 
-    def get_predictions(self, img_str, text):
+    def get_predictions(self, img_str):
         nparr = np.fromstring(img_str, np.uint8)
         img = cv2.imdecode(nparr, cv2.COLOR_BGR2GRAY)
         predicts_coordinates = self.model_face.detectMultiScale(img, 1.2, 4)
+
         face_numbers = predicts_coordinates.shape[0]
         preds_sex_chance = np.zeros(face_numbers)
         preds_sex = np.zeros(face_numbers)
         preds_age = np.zeros(face_numbers)
+
         for i, (x, y, w, h) in enumerate(predicts_coordinates):
             face = Image.fromarray(img[y:y + h, x:x + w])  # Took face only
             face_preprocessed = self.preprocess(face).unsqueeze(0).to(self.device)
+
             raw_sex = self.model_sex(face_preprocessed).data.cpu()
             raw_age = self.model_age(face_preprocessed).data.cpu()
+
             preds_sex_chance[i] = round(float(raw_sex[0][raw_sex.argmax()]), 2) * 100
             preds_sex[i] = raw_sex.argmax()
             preds_age[i] = int(round(float(raw_age), 1) * 10)
+
             text_1 = ((int(1 - preds_sex[i]) * 'fe' + 'male: ')
                       + str(preds_sex_chance[i]) + "%")
             cv2.putText(img, text_1, (x, y - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        (0, 0, 255),
-                        2)
-            text_2 = "age: " + str(preds_age[i]/10)
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=1,
+                        color=(0, 0, 255),
+                        lineType=2
+                        )
+
+            text_2 = "age: " + str(preds_age[i] / 10)
             cv2.putText(img, text_2, (x, y - 30),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        (0, 0, 255),
-                        2)
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+                        fontScale=1,
+                        color=(0, 0, 255),
+                        lineType=2
+                        )
+
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
         return img, preds_sex_chance, preds_sex, preds_age
 

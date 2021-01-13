@@ -90,12 +90,15 @@ async def handle_docs_photo(message: Message):
     try:
         unique_id = message.photo[-1].file_unique_id
         downloaded = await bot.download_file_by_id(message.photo[-1].file_id)
-        text = 'test_text'
-        img, preds_sex_chance, preds_sex, preds_age = models_predict.get_predictions(downloaded.getvalue(), text)
+
+        img, preds_sex_chance, preds_sex, preds_age = models_predict.get_predictions(downloaded.getvalue())
+
         for i in range(preds_sex.shape[0]):
             await db.add_pred(unique_id, preds_sex_chance[i], bool(preds_sex[i]), preds_age[i])
+
         is_success, img_buf_arr = cv2.imencode(".jpg", img)
         byte_img = img_buf_arr.tobytes()
+
         await message.answer_photo(photo=byte_img)
     except UnboundLocalError:
         await message.reply("face not recognized, please upload another photo")
