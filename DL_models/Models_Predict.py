@@ -61,22 +61,35 @@ class Models_Predict:
 
             text_1 = ((int(1 - preds_sex[i]) * 'fe' + 'male: ')
                       + str(preds_sex_chance[i]) + "%")
-            cv2.putText(img, text_1, (x, y - 5),
-                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            cv2.putText(img, text_1, (x - 2, y - 7),
+                        fontFace=cv2.FONT_HERSHEY_DUPLEX,
                         fontScale=1,
-                        color=(0, 0, 255),
+                        color=(0, 0, 0),
+                        lineType=2
+                        )
+            cv2.putText(img, text_1, (x, y - 5),
+                        fontFace=cv2.FONT_HERSHEY_DUPLEX,
+                        fontScale=1,
+                        color=(255, 255, 255),
                         lineType=2
                         )
 
             text_2 = "age: " + str(preds_age[i] / 10)
-            cv2.putText(img, text_2, (x, y - 30),
-                        fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+            cv2.putText(img, text_2, (x - 2, y - 32),
+                        fontFace=cv2.FONT_HERSHEY_DUPLEX,
                         fontScale=1,
-                        color=(0, 0, 255),
+                        color=(0, 0, 0),
                         lineType=2
                         )
+            cv2.putText(img, text_2, (x, y - 30),
+                        fontFace=cv2.FONT_HERSHEY_DUPLEX,
+                        fontScale=1,
+                        color=(255, 255, 255),
+                        lineType=2
+                        )
+            color = [255, 0, int(1-preds_sex[i])*255] #
 
-            cv2.rectangle(img, (x, y), (x + w, y + h), (0, 0, 255), 2)
+            cv2.rectangle(img, (x, y), (x + w, y + h), (color), 2)
         return img, preds_sex_chance, preds_sex, preds_age
 
 
