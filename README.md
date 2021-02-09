@@ -1,4 +1,9 @@
 # Bot that predicts your age and gender
+## Telegram @Age_Sex_bot
+
+### To try
+The bot was created using Docker technology and is currently running on AWS server
+
 ### Description
 The bot is written on the aiogram framework
 
