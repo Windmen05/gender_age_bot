@@ -1,7 +1,12 @@
 # Bot that predicts your age and gender
 ## Telegram @Age_Sex_bot
+### To find bot
+There is a bug in telegram that does not search for some users, 
+but you can still find my bot by writing to your personal messages @Age_Sex_bot and click on it
 
-### To try
+![](https://github.com/Windmen05/gender_age_bot/blob/master/for_Readme/FixTelegrammBug.png "Find Bot")
+
+### Bot Server
 The bot was created using Docker technology and is currently running on AWS server
 
 ### Description
